@@ -1,0 +1,21 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+black = "*"
+importmagic = "*"
+epc = "*"
+isort = "*"
+flake8 = "*"
+djhtml = "*"
+
+[packages]
+django = "*"
+python-dotenv = "*"
+python-environ = "*"
+django-redis = "*"
+
+[requires]
+python_version = "3.1"
