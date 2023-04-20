@@ -1,12 +1,12 @@
 <div class="" x-cloak x-data="pokeList" x-init="await getPokemons()">
     <div class="row">
       <div class="col">
-        <h4>
+        <h5>
           <a @click="getPokemons()"
              type="button"
              style="color: black;
                     text-decoration: none">Pokemon</a>
-        </h4>
+        </h5>
       </div>
       <div class="row">
         <div x-show="showModal" class="col">{% include "components/pokemon-details.html" %}</div>
