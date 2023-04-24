@@ -18,7 +18,7 @@
     <div x-show="showModal" class="col">{% include "components/pokemon-details.html" %}</div>
   </div>
   <div class="text-center" x-show="isLoading">
-    <h1>Loading...</h1>
+    <h1 class="display-5">Loading... <span class="h5 spinner-border"></span></h1>
   </div>
   <div class="row">
     <template x-for="pp in pokepoke">
