@@ -1,42 +1,50 @@
 <div class="" x-cloak x-data="pokeList" x-init="await getPokemons()">
-    <div class="row">
-      <div class="col">
-        <h5>
-          <a @click="getPokemons()"
-             type="button"
-             style="color: black;
-                    text-decoration: none">Pokemon</a>
-        </h5>
-      </div>
-      <div class="row">
-        <div x-show="showModal" class="col">{% include "components/pokemon-details.html" %}</div>
-      </div>
-      <div class="row">
-        <template x-for="pp in pokepoke">
-          <div class="col-sm-12 col-md-3">
-            <div class="card shadow p-3 mb-5 rounded" style="width: 100%; background-color: #FFFCF3;">
-              <img :src="pp.details.sprites.other['official-artwork'].front_default"
-                   class="card-img-top"
-                   alt="front shiny"/>
-              <div class="card-body">
-                <div class="card-title">
-                        <div class="progress" style="height: 6px;">
-                          <!-- hp -->
-                          <div class="progress-bar" role="progressbar" style="background-color: #198754;"
-                            :style="{width:`${pp.details.stats[0].base_stat}%`}" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
-                            :title=`${pp.details.stats[0].stat.name}:${pp.details.stats[0].base_stat}`></div>
-                          <!-- attack -->
-                          <div class="progress-bar" role="progressbar" style="background-color: #dc3545;"
-                            :style="{width:`${pp.details.stats[1].base_stat}%`}" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
-                            :title=`${pp.details.stats[1].stat.name}:${pp.details.stats[1].base_stat}`></div>
-                          <!-- defense -->
-                          <div class="progress-bar" role="progressbar" style="background-color: #adb5bd;"
-                            :style="{width:`${pp.details.stats[2].base_stat}%`}" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
-                            :title=`${pp.details.stats[2].stat.name}:${pp.details.stats[2].base_stat}`></div>
-                          <!-- special-attaack -->
-                          <div class="progress-bar" role="progressbar" style="background-color:  #ffc107;"
-                            :style="{width:`${pp.details.stats[3].base_stat}%`}" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
-                            :title=`${pp.details.stats[3].stat.name}:${pp.details.stats[3].base_stat}`></div>
+  <div class="row">
+    <div class="col">
+      <h4 class="">
+        Pokemon
+        <span type="button" @click="getPokemons; refresh=true; asc=false; setTimeout(() => {refresh=false }, 2000)">
+          <svg :style="refresh && `animation: rotate ${rotate}s`" xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+            fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+            <path
+              d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+          </svg>
+        </span>
+      </h4>
+    </div>
+  </div>
+  <div class="row">
+    <div x-show="showModal" class="col">{% include "components/pokemon-details.html" %}</div>
+  </div>
+  <div class="text-center" x-show="isLoading">
+    <h1>Loading...</h1>
+  </div>
+  <div class="row">
+    <template x-for="pp in pokepoke">
+      <div class="col-sm-12 col-md-3">
+        <div class="card shadow p-3 mb-5 rounded" style="width: 100%; background-color: #FFFCF3;">
+          <img :src="pp.details.sprites.other['official-artwork'].front_default" class="card-img-top"
+            alt="front shiny" />
+          <div class="card-body">
+            <div class="card-title">
+              <div class="progress" style="height: 6px;">
+                <!-- hp -->
+                <div class="progress-bar" role="progressbar" style="background-color: #198754;"
+                  :style="{width:`${pp.details.stats[0].base_stat}%`}" aria-valuenow="15" aria-valuemin="0"
+                  aria-valuemax="100" :title=`${pp.details.stats[0].stat.name}:${pp.details.stats[0].base_stat}`></div>
+                <!-- attack -->
+                <div class="progress-bar" role="progressbar" style="background-color: #dc3545;"
+                  :style="{width:`${pp.details.stats[1].base_stat}%`}" aria-valuenow="30" aria-valuemin="0"
+                  aria-valuemax="100" :title=`${pp.details.stats[1].stat.name}:${pp.details.stats[1].base_stat}`></div>
+                <!-- defense -->
+                <div class="progress-bar" role="progressbar" style="background-color: #adb5bd;"
+                  :style="{width:`${pp.details.stats[2].base_stat}%`}" aria-valuenow="20" aria-valuemin="0"
+                  aria-valuemax="100" :title=`${pp.details.stats[2].stat.name}:${pp.details.stats[2].base_stat}`></div>
+                <!-- special-attaack -->
+                <div class="progress-bar" role="progressbar" style="background-color:  #ffc107;"
+                  :style="{width:`${pp.details.stats[3].base_stat}%`}" aria-valuenow="15" aria-valuemin="0"
+                  aria-valuemax="100" :title=`${pp.details.stats[3].stat.name}:${pp.details.stats[3].base_stat}`></div>
 <!-- special-defense -->
                           <div class="progress-bar" role="progressbar" style="background-color: #fd7e14;"
                             :style="{width:`${pp.details.stats[4].base_stat}%`}" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
@@ -58,61 +66,76 @@
           </div>
         </template>
       </div>
-    </div>
     <script>
-    function pokeList() {
-      return {
-        pokepoke: [],
-        showModal: false,
-        pokemonDetails: null,
-        async fetchData(url) {
-          const resp = await fetch(url);
-          const data = await resp.json();
-          return data;
-        },
-        async choosePokemon(name) {
-          const details = await this.fetchData(
-            `https://pokeapi.co/api/v2/pokemon/${name}`
-          );
-          const species = await this.fetchData(details.species.url);
-          const flavorTextEntries = species.flavor_text_entries;
-          const enKey = Object.keys(flavorTextEntries).find(
-            (key) => flavorTextEntries[key].language.name === "en"
-          );
-          this.pokemonDetails = {
-            name: name,
-            sprite:
-              details.sprites.other.dream_world.front_default ||
-              details.sprites.other["official-artwork"].front_default,
-            species: species.flavor_text_entries[enKey].flavor_text,
-            stats: details.stats,
-            baseExperience: details.base_experience,
-          };
-          this.showModal = true;
-        },
-        async getPokemons() {
-          this.pokepoke = [];
-          const offset = Math.floor(Math.random() * 900);
-          const resp = await fetch(
-            `https://pokeapi.co/api/v2/pokemon?limit=12&offset=${offset}`
-          );
-          const data = await resp.json();
-          data.results.forEach(async (p) => {
-            const resp = await fetch(p.url);
+      function pokeList() {
+        return {
+          pokepoke: [],
+          showModal: false,
+          pokemonDetails: null,
+          refresh: false,
+          rotate: 1.5,
+          isLoading: true,
+          async fetchData(url) {
+            const resp = await fetch(url);
             const data = await resp.json();
-            const resp_species = await fetch(data.species.url);
-            const data_species = await resp_species.json();
-            pokemon = {
-              id: p.url,
-              name: p.name,
-              details: data,
-              speciesText: data_species.flavor_text_entries[0].flavor_text,
+            return data;
+          },
+          async choosePokemon(name) {
+            const details = await this.fetchData(
+              `https://pokeapi.co/api/v2/pokemon/${name}`
+            );
+            const species = await this.fetchData(details.species.url);
+            const flavorTextEntries = species.flavor_text_entries;
+            const enKey = Object.keys(flavorTextEntries).find(
+              (key) => flavorTextEntries[key].language.name === "en"
+            );
+            this.pokemonDetails = {
+              name: name,
+              sprite:
+                details.sprites.other.dream_world.front_default ||
+                details.sprites.other["official-artwork"].front_default,
+              species: species.flavor_text_entries[enKey].flavor_text,
+              stats: details.stats,
+              baseExperience: details.base_experience,
             };
-            // this.pokepoke.push(pokemon);
-            this.pokepoke.push(pokemon);
-          });
-        },
-      };
-    }
+            this.showModal = true;
+          },
+          async getPokemons() {
+            this.pokepoke = [];
+            this.isLoading = true;
+            const offset = Math.floor(Math.random() * 900);
+            const resp = await fetch(
+              `https://pokeapi.co/api/v2/pokemon?limit=12&offset=${offset}`
+            );
+            const data = await resp.json();
+            data.results.forEach(async (p) => {
+              const resp = await fetch(p.url);
+              const data = await resp.json();
+              const resp_species = await fetch(data.species.url);
+              const data_species = await resp_species.json();
+              pokemon = {
+                id: p.url,
+                name: p.name,
+                details: data,
+                speciesText: data_species.flavor_text_entries[0].flavor_text,
+              };
+              // this.pokepoke.push(pokemon);
+              this.pokepoke.push(pokemon);
+              this.isLoading = false;
+            });
+          },
+        };
+      }
     </script>
-  </div>
+    <style>
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(259deg);
+        }
+      }
+    </style>
+</div>
