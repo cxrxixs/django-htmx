@@ -1,3 +1,5 @@
+import time
+
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.template import Context, Template
@@ -6,6 +8,48 @@ from django.template import Context, Template
 def index(request):
     title = "Home"
     return render(request, "index.html", {"title": title})
+
+
+def render_component(request, component):
+    request.status_code = 200
+    context = Context({})
+
+    if component == "instant":
+        template = Template(
+            """
+            <h1>Instant loading component</h1>
+            """
+        )
+
+        return HttpResponse(template.render(context))
+
+    if component == "fast":
+        time.sleep(0.9)
+        template = Template(
+            """
+            <h1>Fast loading component</h1>
+            """
+        )
+
+        return HttpResponse(template.render(context))
+
+    if component == "slow":
+        time.sleep(3.6)
+        template = Template(
+            """
+            <h1>Slow loading component</h1>
+            """
+        )
+
+        return HttpResponse(template.render(context))
+
+    template = Template(
+        """
+        <h1>Not found</h1>
+        """
+    )
+
+    return HttpResponse(template.render(context))
 
 
 def pokemon(request):

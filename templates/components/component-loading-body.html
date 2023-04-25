@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="alert alert-success"
+         hx-get="/component/instant"
+         hx-trigger="load"
+         hx-target="#instant">
+        <div id="instant" class="d-flex align-items-center">
+            <h1>Loading...</h1>
+            <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="alert alert-primary"
+         hx-get="/component/fast"
+         hx-trigger="load"
+         hx-target="#fast">
+        <div id="fast" class="d-flex align-items-center">
+            <h1>Loading...</h1>
+            <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="alert alert-warning"
+         hx-get="/component/slow"
+         hx-trigger="load"
+         hx-target="#slow">
+        <div id="slow" class="d-flex align-items-center">
+            <h1>Loading...</h1>
+            <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+        </div>
+    </div>
+    <div class="alert alert-danger"
+         hx-get="forever/forever"
+         hx-trigger="load"
+         hx-target="#forever">
+        <div id="forever" class="d-flex align-items-center">
+            <h1>Forever loading component</h1>
+            <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+        </div>
+    </div>
+</div>

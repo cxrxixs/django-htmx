@@ -1,6 +1,7 @@
 <div x-data="{ visible: true, title: '{{ title }}' }"
-  x-init="document.title = `${document.title.split('|')[0]} | ${title}`" class="row">
-  <template x-if="visible">
-    {% include "components/pokemon-body.html" %}
-  </template>
+     x-init="document.title = `${document.title.split('|')[0]} | ${title}`"
+     class="row">
+    <template x-if="visible">
+        {% include "components/pokemon-body.html" %}
+    </template>
 </div>
