@@ -44,7 +44,7 @@ if os.path.isfile(dotenv_file):
 else:
     DEBUG = False
     SECRET_KEY = os.environ["SECRET_KEY"]
-    REDIS_URI = os.environ["REDIS_URI"]
+    # REDIS_URI = os.environ["REDIS_URI"]
 
 
 ALLOWED_HOSTS = [
@@ -113,14 +113,14 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {}
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URI,
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
-        "KEY_PREFIX": "django-htmx",
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": REDIS_URI,
+#         "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+#         "KEY_PREFIX": "django-htmx",
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
