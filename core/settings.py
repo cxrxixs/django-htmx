@@ -51,7 +51,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "192.168.0.124",
-    "djang-htmx.onrender",
+    "django-htmx.onrender",
 ]
 
 
