@@ -17,6 +17,7 @@ django = "*"
 python-dotenv = "*"
 python-environ = "*"
 django-redis = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.1"
