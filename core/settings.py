@@ -35,24 +35,30 @@ if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
     env = environ.Env(
         # Set type cast and default value
-        DEBUG=(bool, True)
+        DEBUG=(bool, True),
+        PLATFORM_HOST=(str, ""),
     )
     environ.Env.read_env()
     DEBUG = env("DEBUG")
     SECRET_KEY = env("SECRET_KEY")
     REDIS_URI = env("REDIS_URI")
+    PLATFORM_HOST = env("PLATFORM_HOST")
 else:
     DEBUG = False
-    SECRET_KEY = os.environ["SECRET_KEY"]
-    # REDIS_URI = os.environ["REDIS_URI"]
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    REDIS_URI = os.environ.get("REDIS_URI")
+    PLATFORM_HOST = os.environ.get("PLATFORM_HOST")
 
 
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "192.168.0.124",
-    "django-htmx.onrender.com",
+    # "django-htmx.onrender.com",
 ]
+
+if PLATFORM_HOST:
+    [ALLOWED_HOSTS.append(host.strip()) for host in PLATFORM_HOST.split(",")]
 
 
 # Application definition
