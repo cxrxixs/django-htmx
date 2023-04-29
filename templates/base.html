@@ -31,11 +31,13 @@
     <body class="d-flex flex-column h-100" x-data>
         <nav class="navbar navbar-expand navbar-light">
             <div class="container">
-                <a class="navbar-brand" href="{% url 'index' %}">HOME</a>
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <img alt="" src="{% static 'assets/img/logo-navbar.png' %}" />
+                </a>
                 <div class="navbar-collapse">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link"
+                            <a class="nav-link fs-3"
                                href="{% url 'pokemon' %}"
                                hx-get="{% url 'pokemon' %}"
                                hx-trigger="click"
