@@ -1,10 +1,10 @@
-<div class="" x-cloak x-data="pokeList" x-init="await getPokemons()">
+<div class="" x-cloak x-data="pageData" x-init="await getPokemonList()">
     <div class="row">
         <div class="col">
             <h4 class="">
                 Pokemon
                 <span type="button"
-                      @click="getPokemons; refresh=true; asc=false; setTimeout(() => {refresh=false }, 2000)">
+                      @click="getPokemonList; refresh=true; asc=false; setTimeout(() => {refresh=false }, 2000)">
                     <svg :style="refresh && `animation: rotate ${rotate}s`"
                          xmlns="http://www.w3.org/2000/svg"
                          width="26"
@@ -28,12 +28,12 @@
         </h1>
     </div>
     <div class="row">
-        <template x-for="pp in pokepoke">
+        <template x-for="pokemon in pokemonList">
             <div class="col-sm-12 col-md-3">
                 <div class="card shadow p-3 mb-5 rounded"
                      style="width: 100%;
                             background-color: #FFFCF3">
-                    <img :src="pp.details.sprites.other['official-artwork'].front_default"
+                    <img :src="pokemon.details.sprites.other['official-artwork'].front_default"
                          class="card-img-top"
                          alt="front shiny" />
                     <div class="card-body">
@@ -41,50 +41,52 @@
                             <div class="progress" style="height: 6px;">
                                 <!-- hp -->
                                 <div class="progress-bar" role="progressbar" style="background-color: #198754;"
-                                    :style="{width:`${pp.details.stats[0].base_stat}%`}" aria-valuenow="15" aria-valuemin="0"
-                                    aria-valuemax="100" :title=`${pp.details.stats[0].stat.name}:${pp.details.stats[0].base_stat}`>
+                                    :style="{width:`${pokemon.details.stats[0].base_stat}%`}" aria-valuenow="15" aria-valuemin="0"
+                                    aria-valuemax="100" :title=`${pokemon.details.stats[0].stat.name}:${pokemon.details.stats[0].base_stat}`>
                                 </div>
                                 <!-- attack -->
                                 <div class="progress-bar" role="progressbar" style="background-color: #dc3545;"
-                                    :style="{width:`${pp.details.stats[1].base_stat}%`}" aria-valuenow="30" aria-valuemin="0"
-                                    aria-valuemax="100" :title=`${pp.details.stats[1].stat.name}:${pp.details.stats[1].base_stat}`>
+                                    :style="{width:`${pokemon.details.stats[1].base_stat}%`}" aria-valuenow="30" aria-valuemin="0"
+                                    aria-valuemax="100" :title=`${pokemon.details.stats[1].stat.name}:${pokemon.details.stats[1].base_stat}`>
                                 </div>
                                 <!-- defense -->
                                 <div class="progress-bar" role="progressbar" style="background-color: #adb5bd;"
-                                    :style="{width:`${pp.details.stats[2].base_stat}%`}" aria-valuenow="20" aria-valuemin="0"
-                                    aria-valuemax="100" :title=`${pp.details.stats[2].stat.name}:${pp.details.stats[2].base_stat}`>
+                                    :style="{width:`${pokemon.details.stats[2].base_stat}%`}" aria-valuenow="20" aria-valuemin="0"
+                                    aria-valuemax="100" :title=`${pokemon.details.stats[2].stat.name}:${pokemon.details.stats[2].base_stat}`>
                                 </div>
                                 <!-- special-attaack -->
                                 <div class="progress-bar" role="progressbar" style="background-color:  #ffc107;"
-                                    :style="{width:`${pp.details.stats[3].base_stat}%`}" aria-valuenow="15" aria-valuemin="0"
-                                    aria-valuemax="100" :title=`${pp.details.stats[3].stat.name}:${pp.details.stats[3].base_stat}`>
+                                    :style="{width:`${pokemon.details.stats[3].base_stat}%`}" aria-valuenow="15" aria-valuemin="0"
+                                    aria-valuemax="100" :title=`${pokemon.details.stats[3].stat.name}:${pokemon.details.stats[3].base_stat}`>
                                 </div>
                                 <!-- special-defense -->
                                 <div class="progress-bar" role="progressbar" style="background-color: #fd7e14;"
-                                    :style="{width:`${pp.details.stats[4].base_stat}%`}" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
-                                    :title=`${pp.details.stats[4].stat.name}:${pp.details.stats[4].base_stat}`></div>
+                                    :style="{width:`${pokemon.details.stats[4].base_stat}%`}" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
+                                    :title=`${pokemon.details.stats[4].stat.name}:${pokemon.details.stats[4].base_stat}`>
+                                </div>
                                 <!-- speed -->
                                 <div class="progress-bar" role="progressbar" style="background-color: #0d6efd;"
-                                    :style="{width:`${pp.details.stats[5].base_stat}%`}" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
-                                    :title=`${pp.details.stats[5].stat.name}:${pp.details.stats[5].base_stat}`></div>
+                                    :style="{width:`${pokemon.details.stats[5].base_stat}%`}" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+                                    :title=`${pokemon.details.stats[5].stat.name}:${pokemon.details.stats[5].base_stat}`>
+                                </div>
                             </div>
                             <div class="mt-2 d-flex justify-content-between">
                                 <h5 class="fw-bold"
-                                    x-text="pp.name.charAt(0).toUpperCase() + pp.name.slice(1, 14) + (pp.name.length > 15 ? '...': '')">
+                                    x-text="pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1, 14) + (pokemon.name.length > 15 ? '...': '')">
                                 </h5>
-                                <h5 class="text-warning" x-text="pp.details.base_experience"></h5>
+                                <h5 class="text-warning" x-text="pokemon.details.base_experience"></h5>
                             </div>
                         </div>
-                        <button class="btn btn-primary" @click="choosePokemon(`${pp.name}`)">I choose you!</button>
+                        <button class="btn btn-primary" @click="choosePokemon(`${pokemon.name}`)">I choose you!</button>
                     </div>
                 </div>
             </div>
         </template>
     </div>
     <script>
-      function pokeList() {
+      function pageData() {
         return {
-          pokepoke: [],
+          pokemonList: [],
           showModal: false,
           pokemonDetails: null,
           refresh: false,
@@ -115,8 +117,8 @@
             };
             this.showModal = true;
           },
-          async getPokemons() {
-            this.pokepoke = [];
+          async getPokemonList() {
+            this.pokemonList = [];
             this.isLoading = true;
             const offset = Math.floor(Math.random() * 900);
             const resp = await fetch(
@@ -134,8 +136,7 @@
                 details: data,
                 speciesText: data_species.flavor_text_entries[0].flavor_text,
               };
-              // this.pokepoke.push(pokemon);
-              this.pokepoke.push(pokemon);
+              this.pokemonList.push(pokemon);
               this.isLoading = false;
             });
           },
