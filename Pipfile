@@ -18,6 +18,7 @@ python-dotenv = "*"
 python-environ = "*"
 django-redis = "*"
 gunicorn = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.1"
