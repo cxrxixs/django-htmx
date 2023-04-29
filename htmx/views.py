@@ -7,7 +7,7 @@ from django.template import Context, Template
 
 def index(request):
     title = "Home"
-    return render(request, "index.html", {"title": title})
+    return render(request, "pages/index.html", {"title": title})
 
 
 def render_component(request, component):
@@ -59,7 +59,7 @@ def pokemon(request):
 
     template = Template(
         """
-        {% extends 'base.html' %}
+        {% extends 'layout/base.html' %}
         {% block content %}
         {% include 'pages/pokemon.html' %}
         {% endblock %}
