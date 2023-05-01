@@ -69,24 +69,44 @@ def pokemon(request):
     return HttpResponse(template.render(context))
 
 
-'''
-def htmx_page(request):
-    return render(request, "htmx.html", {})
-
-    if not request.META.get("HTTP_HX_REQUEST"):
-        return render(request, "htmx.html", {"title": "first"})
-
-    template = Template(
+def pokemon_page(request, name):
+    title = "Pokemon Solo"
+    pokemon_name = name
+    template_1 = Template(
+        f"""
+        Pokemon: {name}
         """
-        {% extends 'base.html' %}
+    )
+
+    template_2 = Template(
+        """
+        {% extends 'layout/base.html' %}
         {% block content %}
-        <div class="row">
-        <h1 class='display-1'>hello</h1>
-        </div>
-        <div class='row'>{#% include 'search.html' %#}</div>
+        {% include 'components/pokemon-details.html' %}
         {% endblock %}
         """
     )
-    context = Context({"title": "This index"})
-    return HttpResponse(template.render(context))
-'''
+
+    template_3 = Template(
+        """
+        {% extends 'layout/base.html' %}
+        {% block content %}
+        <div x-data="{ visible: true, title: '{{ title }}' }"
+        x-init="document.title = `${document.title.split('|')[0]} | ${title}`"
+        class="row">
+        <template x-if="visible">
+        {% include "pages/pokemon.html" %}
+        </template>
+        </div>
+        {% endblock %}
+        """
+    )
+    context = Context({"title": title})
+    # return HttpResponse(template_2.render(context))
+
+    payload = {
+        "title": title,
+        "pokemonName": pokemon_name,
+    }
+
+    return render(request, "pages/pokemon-solo-view.html", context={"payload": payload})

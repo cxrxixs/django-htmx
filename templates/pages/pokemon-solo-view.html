@@ -1,0 +1,40 @@
+{% extends "layout/base.html" %}
+{% block content %}
+    <div class="mt-5"
+         x-data="pageData"
+         x-init="await choosenPokemon; scrollTo(0, 0);">
+        <template x-if="pokemon">
+            <h3 x-text="payload.pokemonName.charAt(0).toUpperCase() + payload.pokemonName.slice(1)"></h3>
+        </template>
+        <template x-cloak x-if="!pokemon">
+            <h3>Pokemon not caught!</h3>
+        </template>
+        <div class="row">
+            <div class="col-md-4">
+                <img class="img-thumbnail border-0"
+                     alt=""
+                     :src="pokemon.sprites.other['official-artwork'].front_default" />
+            </div>
+            <div class="col-md-8">
+                <h1>There</h1>
+            </div>
+        </div>
+        {{ payload|json_script:"payload" }}
+        <script>
+        function pageData(){
+          return {
+            payload: JSON.parse(document.querySelector('#payload').textContent),
+            pokemon: null,
+            async choosenPokemon(){
+              const resp = await await fetch(`https://pokeapi.co/api/v2/pokemon/${this.payload.pokemonName}`)
+              if (resp.ok) {
+                this.pokemon = await resp.json();
+              } else {
+                console.log("Pokemon not found")
+              }
+            }
+          }
+        }
+        </script>
+    </div>
+{% endblock %}

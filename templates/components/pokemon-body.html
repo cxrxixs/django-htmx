@@ -77,7 +77,10 @@
                                 <h5 class="text-warning" x-text="pokemon.details.base_experience"></h5>
                             </div>
                         </div>
-                        <button class="btn btn-primary" @click="choosePokemon(`${pokemon.name}`)">I choose you!</button>
+                        <button class="btn btn-primary"
+                                @click=" choosePokemon(`${pokemon.name}`); window.history.pushState('', 'DJ| Pokemon', `/pokemon/${pokemon.name}`); ">
+                            I choose you!
+                        </button>
                     </div>
                 </div>
             </div>
