@@ -2,36 +2,96 @@
 {% block content %}
     <div class="mt-5"
          x-data="pageData"
-         x-init="await choosenPokemon; scrollTo(0, 0);">
-        <template x-if="pokemon">
-            <h3 x-text="payload.pokemonName.charAt(0).toUpperCase() + payload.pokemonName.slice(1)"></h3>
-        </template>
-        <template x-cloak x-if="!pokemon">
-            <h3>Pokemon not caught!</h3>
-        </template>
-        <div class="row">
-            <div class="col-md-4">
-                <img class="img-thumbnail border-0"
-                     alt=""
-                     :src="pokemon.sprites.other['official-artwork'].front_default" />
-            </div>
-            <div class="col-md-8">
-                <h1>There</h1>
-            </div>
+         x-init="await choosenPokemon; window.scrollTo(0,0);">
+        <div x-show="isLoading">
+            <h3>Catching Pokemon!</h3>
         </div>
+        <template x-if="!isValid">
+            <h3>Pokemon got away!</h3>
+        </template>
+        <template x-if="pokemon">
+            <div>
+                <div class="row">
+                    <div class="col">
+                        <h2 class="fw-semibold text-muted"
+                            x-text="payload.pokemonName.charAt(0).toUpperCase() + payload.pokemonName.slice(1)"></h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-thumbnail border-0"
+                             style="width: 75%"
+                             alt=""
+                             :src="pokemon.sprites.other['official-artwork'].front_default" />
+                        <div>
+                            <template x-for="ability in pokemon.abilities">
+                                <span class="mx-1 badge rounded-pill"
+                                      type="button"
+                                      :class="ability.is_hidden ? 'text-bg-primary' : 'text-bg-secondary'"
+                                      @click="ability.is_hidden=!ability.is_hidden; let randomStat = Math.floor(Math.random() * 6); let bonus = Math.floor(Math.random() * 78); pokemon.stats[randomStat].base_stat = pokemon.stats[randomStat].base_stat + bonus;"
+                                      x-text="ability.ability.name"></span>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <template x-for="stat in pokemon.stats">
+                            <div class="row">
+                                <div class="col-md-3 mb-2">
+                                    <h4 class="fs-regular text-muted" x-text="stat.stat.name"></h4>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mt-2">
+                                        <div class="progress">
+                                            <div class="progress-bar text-dark"
+                                                 x-text="stat.base_stat"
+                                                 role="progressbar"
+                                                 style="background-color: #E5D2BF"
+                                                 :style="{width:`${(stat.base_stat / 250) * 100}%`}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </template>
         {{ payload|json_script:"payload" }}
         <script>
         function pageData(){
           return {
             payload: JSON.parse(document.querySelector('#payload').textContent),
             pokemon: null,
+            isValid: true,
+            isLoading: true,
+            abilities: [],
             async choosenPokemon(){
               const resp = await await fetch(`https://pokeapi.co/api/v2/pokemon/${this.payload.pokemonName}`)
               if (resp.ok) {
                 this.pokemon = await resp.json();
+                this.isValid = true;
+                const ability = this.pokemon.abilities;
+                Object.keys(ability).forEach(k=> {
+                  const obj = {}
+                  obj["name"] = ability[k].ability.name;
+                  obj["is_hidden"] = ability[k].is_hidden;
+                  /* obj["bonus"] = Math.floor(Math.random() * 100); */
+                  bonus = [];
+                  for (let i=0; i <= Math.floor(Math.random() * 6); i++) {
+                    special = {}
+                    special["item"] = i;
+                    special["points"] = Math.floor(Math.random() * 100);
+                    bonus.push(special);
+                  }
+                  obj["bonus"] = bonus
+                  this.abilities.push(obj)
+                });
+                console.log(this.abilities)
               } else {
                 console.log("Pokemon not found")
+                this.isValid = false;
               }
+              this.isLoading = false;
             }
           }
         }
