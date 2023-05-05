@@ -1,8 +1,6 @@
 {% extends "layout/base.html" %}
 {% block content %}
-    <div class="mt-5"
-         x-data="pageData"
-         x-init="await choosenPokemon; window.scrollTo(0,0);">
+    <div class="mt-5" x-data="pageData" x-init="await choosenPokemon;">
         <div x-show="isLoading">
             <h3>Catching Pokemon!</h3>
         </div>
@@ -24,17 +22,17 @@
                              alt=""
                              :src="pokemon.sprites.other['official-artwork'].front_default" />
                         <div>
-                            <template x-for="ability in pokemon.abilities">
+                            <template x-for="ability in abilities" :key="ability.id">
                                 <span class="mx-1 badge rounded-pill"
                                       type="button"
-                                      :class="ability.is_hidden ? 'text-bg-primary' : 'text-bg-secondary'"
-                                      @click="ability.is_hidden=!ability.is_hidden; let randomStat = Math.floor(Math.random() * 6); let bonus = Math.floor(Math.random() * 78); pokemon.stats[randomStat].base_stat = pokemon.stats[randomStat].base_stat + bonus;"
-                                      x-text="ability.ability.name"></span>
+                                      :class="ability.isHidden ? 'text-bg-primary' : 'text-bg-secondary'"
+                                      @click="toggleAbility(ability.id)"
+                                      x-text="ability.name"></span>
                             </template>
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <template x-for="stat in pokemon.stats">
+                        <template x-for="stat in statistics">
                             <div class="row">
                                 <div class="col-md-3 mb-2">
                                     <h4 class="fs-regular text-muted" x-text="stat.stat.name"></h4>
@@ -58,43 +56,66 @@
         </template>
         {{ payload|json_script:"payload" }}
         <script>
-        function pageData(){
-          return {
-            payload: JSON.parse(document.querySelector('#payload').textContent),
-            pokemon: null,
-            isValid: true,
-            isLoading: true,
-            abilities: [],
-            async choosenPokemon(){
-              const resp = await await fetch(`https://pokeapi.co/api/v2/pokemon/${this.payload.pokemonName}`)
-              if (resp.ok) {
-                this.pokemon = await resp.json();
-                this.isValid = true;
-                const ability = this.pokemon.abilities;
-                Object.keys(ability).forEach(k=> {
-                  const obj = {}
-                  obj["name"] = ability[k].ability.name;
-                  obj["is_hidden"] = ability[k].is_hidden;
-                  /* obj["bonus"] = Math.floor(Math.random() * 100); */
-                  bonus = [];
-                  for (let i=0; i <= Math.floor(Math.random() * 6); i++) {
-                    special = {}
-                    special["item"] = i;
-                    special["points"] = Math.floor(Math.random() * 100);
-                    bonus.push(special);
+          function pageData() {
+            return {
+              payload: JSON.parse(document.querySelector('#payload').textContent),
+              pokemon: null,
+              isValid: true,
+              isLoading: true,
+              abilities: [],
+              statistics: [],
+              toggleAbility(id) {
+                this.abilities[id].isHidden = !this.abilities[id].isHidden;
+                const bonus = this.abilities[id].bonus;
+
+                Object.keys(bonus).forEach(k => {
+                  if (this.abilities[id].isHidden === true) {
+                    if (parseInt(this.statistics[bonus[k].item].base_stat) == 0) {
+                      console.log("Zero befores", this.statistics[bonus[k].item].base_stat);
+                      this.statistics[bonus[k].item].base_stat = this.pokemon.stats[bonus[k].item].base_stat;
+                    } else {
+                      this.statistics[bonus[k].item].base_stat += bonus[k].points;
+                      (parseInt(this.statistics[bonus[k].item].base_stat) > 250) ? this.statistics[bonus[k].item].base_stat = 250 : '';
+                    }
+                  } else {
+                    if (parseInt(this.statistics[bonus[k].item].base_stat) == 250) {
+                      this.statistics[bonus[k].item].base_stat = this.pokemon.stats[bonus[k].item].base_stat;
+                    } else {
+                      this.statistics[bonus[k].item].base_stat -= bonus[k].points;
+                      (parseInt(this.statistics[bonus[k].item].base_stat) < 0) ? this.statistics[bonus[k].item].base_stat = 0 : '';
+                    }
                   }
-                  obj["bonus"] = bonus
-                  this.abilities.push(obj)
                 });
-                console.log(this.abilities)
-              } else {
-                console.log("Pokemon not found")
-                this.isValid = false;
-              }
-              this.isLoading = false;
+              },
+              async choosenPokemon() {
+                const resp = await await fetch(`https://pokeapi.co/api/v2/pokemon/${this.payload.pokemonName}`)
+                if (resp.ok) {
+                  this.pokemon = await resp.json();
+                  this.isValid = true;
+                  this.statistics = JSON.parse(JSON.stringify(this.pokemon.stats));
+                  const ability = this.pokemon.abilities;
+                  Object.keys(ability).forEach(k => {
+                    const obj = {}
+                    obj["id"] = k;
+                    obj["name"] = ability[k].ability.name;
+                    obj["isHidden"] = ability[k].is_hidden;
+                    bonus = [];
+                    for (let i = 0; i <= Math.floor(Math.random() * 6); i++) {
+                      special = {}
+                      special["item"] = Math.floor(Math.random() * 6);
+                      special["points"] = Math.floor(Math.random() * 88 + 12);
+                      bonus.push(special);
+                    }
+                    obj["bonus"] = bonus
+                    this.abilities.push(obj)
+                  });
+                } else {
+                  this.isValid = false;
+                }
+                this.isLoading = false;
+              },
             }
           }
-        }
         </script>
     </div>
 {% endblock %}
