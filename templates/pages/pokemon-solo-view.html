@@ -141,7 +141,7 @@
                    */
                   const respDetails = await fetch(this.pokemon.species.url);
                   if (respDetails.ok) {
-                    const data = await respDetails.json()
+                    const data = await respDetails.json();
                     const flavorTextEntries = data.flavor_text_entries;
                     const enLangKey = Object.keys(flavorTextEntries).find(
                       (key) => flavorTextEntries[key].language.name === "en"
@@ -156,5 +156,10 @@
             };
           }
         </script>
+        <style>
+          html {
+            height: 100%;
+          }
+        </style>
     </div>
 {% endblock %}
