@@ -1,5 +1,6 @@
 import time
 
+from core.context_processors import git_version
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.template import Context, Template
@@ -7,7 +8,11 @@ from django.template import Context, Template
 
 def index(request):
     title = "Home"
-    return render(request, "pages/index.html", {"title": title})
+
+    context = {
+        "title": title,
+    }
+    return render(request, "pages/index.html", context=context)
 
 
 def render_component(request, component):
@@ -65,7 +70,13 @@ def pokemon(request):
         {% endblock %}
         """
     )
-    context = Context({"title": title})
+    context = Context(
+        {
+            "title": title,
+        }
+    )
+    context.update(git_version(request))
+
     return HttpResponse(template.render(context))
 
 

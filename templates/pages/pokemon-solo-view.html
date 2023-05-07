@@ -1,6 +1,8 @@
 {% extends "layout/base.html" %}
 {% block content %}
-    <div class="mt-5" x-data="pageData" x-init="await choosenPokemon;">
+    <div class="mt-5"
+         x-data="pageData"
+         x-init="await choosenPokemon; document.documentElement.scrollTop = 0; document.body.scrollTop = 0;">
         <div x-show="isLoading">
             <h3>Catching Pokemon!</h3>
         </div>
@@ -105,10 +107,16 @@
                 const resp = await await fetch(
                   `https://pokeapi.co/api/v2/pokemon/${this.payload.pokemonName}`
                 );
+                if (!resp.ok) {
+                  this.isValid = false;
+                  this.isLoading = false;
+                  return
+                }
+
                 if (resp.ok) {
                   this.pokemon = await resp.json();
                   this.isValid = true;
-
+                  this.isLoading = false;
                   /*
                    * Statistics
                    * Store statistics original values
@@ -148,18 +156,10 @@
                     );
                     this.species = flavorTextEntries[enLangKey].flavor_text;
                   }
-                } else {
-                  this.isValid = false;
                 }
-                this.isLoading = false;
               },
             };
           }
         </script>
-        <style>
-          html {
-            height: 100%;
-          }
-        </style>
     </div>
 {% endblock %}

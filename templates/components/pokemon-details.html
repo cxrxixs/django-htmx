@@ -87,8 +87,12 @@
                                                         ></div>
                                                 </div>
                                                 <div class="d-flex justify-content-between">
-                                                    <h2 class="fw-bold mt-3"
-                                                        x-text="pokemonDetails.name.charAt(0).toUpperCase() + pokemonDetails.name.slice(1)">
+                                                    <h2 class="fw-bold mt-3">
+                                                        <a href
+                                                           pokemonDetails.name
+                                                           x-text="pokemonDetails.name.charAt(0).toUpperCase() + pokemonDetails.name.slice(1)"
+                                                           style="text-decoration: none;
+                                                                  color: inherit"></a>
                                                     </h2>
                                                     <h2 class="text-warning mt-3 fw-bold"
                                                         x-text="pokemonDetails.baseExperience">HEELLLO</h2>
