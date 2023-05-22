@@ -1,6 +1,8 @@
 <!-- prettier-ignore -->
 {% block pokemon-details %}
-    <template x-if="pokemonDetails">
+    <!-- https://htmx.org/docs/#3rd-party:~:text=Some%203rd%20party%20libraries%20create%20content%20from%20HTML%20template%20elements.%20For%20instance%2C%20Alpine%20JS  -->
+    <template x-if="pokemonDetails"
+              x-init="$watch('showModal', value => { if (showModal) { htmx.process(document.querySelector('#content')) } })">
         <div class="modal-backdrop" style="background-color: #00000099">
             <div class="modal fade"
                  :class="showModal ? 'show': ''"
@@ -88,14 +90,16 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between">
                                                     <h2 class="fw-bold mt-3">
-                                                        <a href
-                                                           pokemonDetails.name
-                                                           x-text="pokemonDetails.name.charAt(0).toUpperCase() + pokemonDetails.name.slice(1)"
-                                                           style="text-decoration: none;
-                                                                  color: inherit"></a>
+                                                        <a
+                                                            :href=pokemonDetails.name
+                                                            :hx-get=`/pokemon/${pokemonDetails.name}`
+                                                            hx-trigger="click"
+                                                            hx-target="#content"
+                                                            x-text="pokemonDetails.name.charAt(0).toUpperCase() + pokemonDetails.name.slice(1)" style="text-decoration: none;
+                                                        color: inherit"></a>
                                                     </h2>
                                                     <h2 class="text-warning mt-3 fw-bold"
-                                                        x-text="pokemonDetails.baseExperience">HEELLLO</h2>
+                                                        x-text="pokemonDetails.baseExperience">Hello</h2>
                                                 </div>
                                             </div>
                                             <p class="card-text" x-text="pokemonDetails.species"></p>
