@@ -1,15 +1,25 @@
-<div class="mt-5"
+<div class="mt-3"
      x-data="pageData"
-     x-init="await choosenPokemon; document.documentElement.scrollTop = 0; document.body.scrollTop = 0;">
-    <div x-show="isLoading">
-        <h3>Catching Pokemon!</h3>
+     x-init="await choosenPokemon; document.documentElement.scrollTop = 0; document.body.scrollTop = 0; $watch('searchPokemonName', value => { if (searchPokemonName) { htmx.process(document.querySelector('#content')) }});">
+    <div x-cloak x-show="isLoading">
+        <h3>Catching Pokemon...</h3>
     </div>
-    <template x-if="!isValid">
-        <h3>Pokemon got away!</h3>
+    <template x-cloak x-if="!isValid">
+        <h3>It got away!</h3>
     </template>
+    <div class="mt-4">
+        <form @submit.prevent="window.history.pushState('', 'DJ| Pokemon',
+            `/pokemon/${searchPokemonName}`);" :hx-get=`/pokemon/${searchPokemonName}` hx-trigger="submit"
+            hx-target="#content">
+            <div class="input-group">
+                <input name="" type="text" value="" x-model.lazy="searchPokemonName" />
+                <button type="submit" class="btn btn-warning">Search</button>
+            </div>
+        </form>
+    </div>
     <template x-if="pokemon">
         <div>
-            <div class="row">
+            <div class="row mt-4">
                 <div class="col">
                     <h2 class="fw-semibold text-muted"
                         x-text="payload.pokemonName.charAt(0).toUpperCase() + payload.pokemonName.slice(1)"></h2>
@@ -70,6 +80,7 @@
               abilities: [],
               statistics: [],
               species: "",
+              searchPokemonName: "",
               toggleAbility(id) {
                 this.abilities[id].isHidden = !this.abilities[id].isHidden;
                 const bonus = this.abilities[id].bonus;
@@ -94,8 +105,8 @@
                         this.pokemon.stats[bonus[k].item].base_stat;
                     } else {
                       this.statistics[bonus[k].item].base_stat -= bonus[k].points;
-                      parseInt(this.statistics[bonus[k].item].base_stat) < 0
-                        ? (this.statistics[bonus[k].item].base_stat = 0)
+                    parseInt(this.statistics[bonus[k].item].base_stat) < 0
+                      ? (this.statistics[bonus[k].item].base_stat = 0)
                         : "";
                     }
                   }
