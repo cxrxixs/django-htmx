@@ -90,74 +90,73 @@
         </template>
     </div>
     <script>
-      function pageData() {
-        return {
-          pokemonList: [],
-          showModal: false,
-          pokemonDetails: null,
-          refresh: false,
-          rotate: 1.9,
-          isLoading: true,
-          async fetchData(url) {
-            const resp = await fetch(url);
-            const data = await resp.json();
-            return data;
-          },
-          async choosePokemon(name) {
-            const details = await this.fetchData(
-              `https://pokeapi.co/api/v2/pokemon/${name}`
-            );
-            const species = await this.fetchData(details.species.url);
-            const flavorTextEntries = species.flavor_text_entries;
-            const enKey = Object.keys(flavorTextEntries).find(
-              (key) => flavorTextEntries[key].language.name === "en"
-            );
-            this.pokemonDetails = {
-              name: name,
-              sprite:
-                details.sprites.other.dream_world.front_default ||
-                details.sprites.other["official-artwork"].front_default,
-              species: species.flavor_text_entries[enKey].flavor_text,
-              stats: details.stats,
-              baseExperience: details.base_experience,
+        function pageData() {
+            return {
+                pokemonList: [],
+                showModal: false,
+                pokemonDetails: null,
+                refresh: false,
+                rotate: 1.9,
+                isLoading: true,
+                async fetchData(url) {
+                    const resp = await fetch(url);
+                    const data = await resp.json();
+                    return data;
+                },
+                async choosePokemon(name) {
+                    const details = await this.fetchData(
+                        `https://pokeapi.co/api/v2/pokemon/${name}`
+                    );
+                    const species = await this.fetchData(details.species.url);
+                    const flavorTextEntries = species.flavor_text_entries;
+                    const enKey = Object.keys(flavorTextEntries).find(
+                        (key) => flavorTextEntries[key].language.name === "en"
+                    );
+                    this.pokemonDetails = {
+                        name: name,
+                        sprite: details.sprites.other.dream_world.front_default ||
+                            details.sprites.other["official-artwork"].front_default,
+                        species: species.flavor_text_entries[enKey].flavor_text,
+                        stats: details.stats,
+                        baseExperience: details.base_experience,
+                    };
+                    this.showModal = true;
+                },
+                async getPokemonList() {
+                    this.pokemonList = [];
+                    this.isLoading = true;
+                    const offset = Math.floor(Math.random() * 900);
+                    const resp = await fetch(
+                        `https://pokeapi.co/api/v2/pokemon?limit=12&offset=${offset}`
+                    );
+                    const data = await resp.json();
+                    data.results.forEach(async (p) => {
+                        const resp = await fetch(p.url);
+                        const data = await resp.json();
+                        const resp_species = await fetch(data.species.url);
+                        const data_species = await resp_species.json();
+                        pokemon = {
+                            id: p.url,
+                            name: p.name,
+                            details: data,
+                            speciesText: data_species.flavor_text_entries[0].flavor_text,
+                        };
+                        this.pokemonList.push(pokemon);
+                        this.isLoading = false;
+                    });
+                },
             };
-            this.showModal = true;
-          },
-          async getPokemonList() {
-            this.pokemonList = [];
-            this.isLoading = true;
-            const offset = Math.floor(Math.random() * 900);
-            const resp = await fetch(
-              `https://pokeapi.co/api/v2/pokemon?limit=12&offset=${offset}`
-            );
-            const data = await resp.json();
-            data.results.forEach(async (p) => {
-              const resp = await fetch(p.url);
-              const data = await resp.json();
-              const resp_species = await fetch(data.species.url);
-              const data_species = await resp_species.json();
-              pokemon = {
-                id: p.url,
-                name: p.name,
-                details: data,
-                speciesText: data_species.flavor_text_entries[0].flavor_text,
-              };
-              this.pokemonList.push(pokemon);
-              this.isLoading = false;
-            });
-          },
-        };
-      }
+        }
     </script>
     <style>
-      @keyframes rotate {
-        0% {
-          transform: rotate(0deg);
-        }
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
 
-        100% {
-          transform: rotate(360deg);
+            100% {
+                transform: rotate(360deg);
+            }
         }
-      }
     </style>
 </div>

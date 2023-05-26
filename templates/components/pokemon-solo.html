@@ -71,103 +71,103 @@
     </template>
     {{ payload|json_script:"payload" }}
     <script>
-          function pageData() {
+        function pageData() {
             return {
-              payload: JSON.parse(document.querySelector("#payload").textContent),
-              pokemon: null,
-              isValid: true,
-              isLoading: true,
-              abilities: [],
-              statistics: [],
-              species: "",
-              searchPokemonName: "",
-              toggleAbility(id) {
-                this.abilities[id].isHidden = !this.abilities[id].isHidden;
-                const bonus = this.abilities[id].bonus;
-                Object.keys(bonus).forEach((k) => {
-                  if (this.abilities[id].isHidden === true) {
-                    if (parseInt(this.statistics[bonus[k].item].base_stat) == 0) {
-                      console.log(
-                        "Zero befores",
-                        this.statistics[bonus[k].item].base_stat
-                      );
-                      this.statistics[bonus[k].item].base_stat =
-                        this.pokemon.stats[bonus[k].item].base_stat;
-                    } else {
-                      this.statistics[bonus[k].item].base_stat += bonus[k].points;
-                      parseInt(this.statistics[bonus[k].item].base_stat) > 250
-                        ? (this.statistics[bonus[k].item].base_stat = 250)
-                        : "";
-                    }
-                  } else {
-                    if (parseInt(this.statistics[bonus[k].item].base_stat) == 250) {
-                      this.statistics[bonus[k].item].base_stat =
-                        this.pokemon.stats[bonus[k].item].base_stat;
-                    } else {
-                      this.statistics[bonus[k].item].base_stat -= bonus[k].points;
-                    parseInt(this.statistics[bonus[k].item].base_stat) < 0
-                      ? (this.statistics[bonus[k].item].base_stat = 0)
-                        : "";
-                    }
-                  }
-                });
-              },
-              async choosenPokemon() {
-                const resp = await await fetch(
-                  `https://pokeapi.co/api/v2/pokemon/${this.payload.pokemonName}`
-                );
-                if (!resp.ok) {
-                  this.isValid = false;
-                  this.isLoading = false;
-                  return
-                }
-
-                if (resp.ok) {
-                  this.pokemon = await resp.json();
-                  this.isValid = true;
-                  this.isLoading = false;
-                  /*
-                   * Statistics
-                   * Store statistics original values
-                   */
-                  this.statistics = JSON.parse(JSON.stringify(this.pokemon.stats));
-
-                  /*
-                   * Abilities
-                   * Store abilities along with bonus points for adding/removing from statistics when its enabled/disabled
-                   */
-                  const ability = this.pokemon.abilities;
-                  Object.keys(ability).forEach((k) => {
-                    const obj = {};
-                    obj["id"] = k;
-                    obj["name"] = ability[k].ability.name;
-                    obj["isHidden"] = ability[k].is_hidden;
-                    bonus = [];
-                    for (let i = 0; i <= Math.floor(Math.random() * 6); i++) {
-                      special = {};
-                      special["item"] = Math.floor(Math.random() * 6);
-                      special["points"] = Math.floor(Math.random() * 88 + 12);
-                      bonus.push(special);
-                    }
-                    obj["bonus"] = bonus;
-                    this.abilities.push(obj);
-                  });
-
-                  /*
-                   * Description of species in english
-                   */
-                  const respDetails = await fetch(this.pokemon.species.url);
-                  if (respDetails.ok) {
-                    const data = await respDetails.json();
-                    const flavorTextEntries = data.flavor_text_entries;
-                    const enLangKey = Object.keys(flavorTextEntries).find(
-                      (key) => flavorTextEntries[key].language.name === "en"
+                payload: JSON.parse(document.querySelector("#payload").textContent),
+                pokemon: null,
+                isValid: true,
+                isLoading: true,
+                abilities: [],
+                statistics: [],
+                species: "",
+                searchPokemonName: "",
+                toggleAbility(id) {
+                    this.abilities[id].isHidden = !this.abilities[id].isHidden;
+                    const bonus = this.abilities[id].bonus;
+                    Object.keys(bonus).forEach((k) => {
+                        if (this.abilities[id].isHidden === true) {
+                            if (parseInt(this.statistics[bonus[k].item].base_stat) == 0) {
+                                console.log(
+                                    "Zero befores",
+                                    this.statistics[bonus[k].item].base_stat
+                                );
+                                this.statistics[bonus[k].item].base_stat =
+                                    this.pokemon.stats[bonus[k].item].base_stat;
+                            } else {
+                                this.statistics[bonus[k].item].base_stat += bonus[k].points;
+                                parseInt(this.statistics[bonus[k].item].base_stat) > 250 ?
+                                    (this.statistics[bonus[k].item].base_stat = 250) :
+                                    "";
+                            }
+                        } else {
+                            if (parseInt(this.statistics[bonus[k].item].base_stat) == 250) {
+                                this.statistics[bonus[k].item].base_stat =
+                                    this.pokemon.stats[bonus[k].item].base_stat;
+                            } else {
+                                this.statistics[bonus[k].item].base_stat -= bonus[k].points;
+                                parseInt(this.statistics[bonus[k].item].base_stat) < 0 ?
+                                    (this.statistics[bonus[k].item].base_stat = 0) :
+                                    "";
+                            }
+                        }
+                    });
+                },
+                async choosenPokemon() {
+                    const resp = await await fetch(
+                        `https://pokeapi.co/api/v2/pokemon/${this.payload.pokemonName}`
                     );
-                    this.species = flavorTextEntries[enLangKey].flavor_text;
-                  }
-                }
-              },
+                    if (!resp.ok) {
+                        this.isValid = false;
+                        this.isLoading = false;
+                        return
+                    }
+
+                    if (resp.ok) {
+                        this.pokemon = await resp.json();
+                        this.isValid = true;
+                        this.isLoading = false;
+                        /*
+                         * Statistics
+                         * Store statistics original values
+                         */
+                        this.statistics = JSON.parse(JSON.stringify(this.pokemon.stats));
+
+                        /*
+                         * Abilities
+                         * Store abilities along with bonus points for adding/removing from statistics when its enabled/disabled
+                         */
+                        const ability = this.pokemon.abilities;
+                        Object.keys(ability).forEach((k) => {
+                            const obj = {};
+                            obj["id"] = k;
+                            obj["name"] = ability[k].ability.name;
+                            obj["isHidden"] = ability[k].is_hidden;
+                            bonus = [];
+                            for (let i = 0; i <= Math.floor(Math.random() * 6); i++) {
+                                special = {};
+                                special["item"] = Math.floor(Math.random() * 6);
+                                special["points"] = Math.floor(Math.random() * 88 + 12);
+                                bonus.push(special);
+                            }
+                            obj["bonus"] = bonus;
+                            this.abilities.push(obj);
+                        });
+
+                        /*
+                         * Description of species in english
+                         */
+                        const respDetails = await fetch(this.pokemon.species.url);
+                        if (respDetails.ok) {
+                            const data = await respDetails.json();
+                            const flavorTextEntries = data.flavor_text_entries;
+                            const enLangKey = Object.keys(flavorTextEntries).find(
+                                (key) => flavorTextEntries[key].language.name === "en"
+                            );
+                            this.species = flavorTextEntries[enLangKey].flavor_text;
+                        }
+                    }
+                },
             };
-          }
+        }
     </script>
 </div>
