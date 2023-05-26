@@ -23,9 +23,12 @@
         <div x-show="showModal" class="col">{% include "components/pokemon-details.html" %}</div>
     </div>
     <div class="text-center" x-show="isLoading">
-        <h1 class="display-5">
-            Loading... <span class="h5 spinner-border"></span>
-        </h1>
+        <div class="display-5">
+            <span class="h5 spinner-grow spinner-grow-md"
+                  role="status"
+                  aria-hidden="true"></span>
+            Loading...
+        </div>
     </div>
     <div class="row">
         <template x-for="pokemon in pokemonList">
