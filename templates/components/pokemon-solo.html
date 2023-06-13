@@ -9,7 +9,7 @@
     </template>
     <div class="mt-4">
         <form @submit.prevent="window.history.pushState('', 'DJ| Pokemon',
-            `/pokemon/${searchPokemonName}`);" :hx-get=`/pokemon/${searchPokemonName}` hx-trigger="submit"
+            `/pokemon/${searchPokemonName.toLowerCase()}`);" :hx-get=`/pokemon/${searchPokemonName.toLowerCase()}` hx-trigger="submit"
             hx-target="#content">
             <div class="input-group">
                 <input name="" type="text" value="" x-model.lazy="searchPokemonName" />
