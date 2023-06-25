@@ -87,10 +87,6 @@
                     Object.keys(bonus).forEach((k) => {
                         if (this.abilities[id].isHidden === true) {
                             if (parseInt(this.statistics[bonus[k].item].base_stat) == 0) {
-                                console.log(
-                                    "Zero befores",
-                                    this.statistics[bonus[k].item].base_stat
-                                );
                                 this.statistics[bonus[k].item].base_stat =
                                     this.pokemon.stats[bonus[k].item].base_stat;
                             } else {
