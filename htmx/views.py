@@ -1,7 +1,7 @@
 import time
 
 from core.context_processors import git_version
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.template import Context, Template
 
@@ -110,3 +110,11 @@ def pokemon_page(request, name):
     context.update(git_version(request))
 
     return HttpResponse(template.render(context))
+
+
+def health(request):
+    return JsonResponse(
+        {
+            "status": "ok",
+        }
+    )

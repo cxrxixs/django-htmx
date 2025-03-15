@@ -7,4 +7,5 @@ urlpatterns = [
     path("component/<component>", views.render_component, name="component"),
     path("pokemon", views.pokemon, name="pokemon"),
     path("pokemon/<str:name>", views.pokemon_page, name="pokemon-solo-page"),
+    path("health", views.health, name="health"),
 ]
